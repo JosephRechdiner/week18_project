@@ -1,12 +1,8 @@
 from confluent_kafka import Consumer
 import os
 import json
-import logging
 from producer_handler import KafkaProducer
 from text_handler import get_instructions, clean_text
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 KAFKA_LISTEN_TOPIC = os.getenv("KAFKA_LISTEN_TOPIC")
 BOOTSTRAP_SERVERS = os.getenv("BOOTSTRAP_SERVERS")
@@ -33,14 +29,10 @@ while True:
         continue
     value = msg.value().decode("utf-8")
     order = json.loads(value)
-    logger.info(order)
 
-    #
+    # cleaning instructions and preperations
     cleaned_instruction = clean_text(order["special_instructions"])
     cleaned_prep_instructions = clean_text(get_instructions(order["pizza_type"]))
-
-    logger.info(cleaned_instruction)
-    logger.info(cleaned_prep_instructions)
 
     cleaned_instruction = {
         "order_id": order["order_id"],
@@ -48,4 +40,6 @@ while True:
         "special_instructions": cleaned_instruction,
         "prep_instructions": cleaned_prep_instructions
     }
+
+    # sending to kafka
     producer.send_orders_to_kafka(cleaned_instruction)

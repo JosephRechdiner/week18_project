@@ -40,6 +40,9 @@ while True:
     logger.info(order)
     
     try:
+        # waiting...
+        time.sleep(6)
+        
         # update status in mongo
         client = mongo_manager.get_client()
         update_order_in_mongo(order["order_id"], client)
@@ -47,8 +50,7 @@ while True:
         # deleting from redis
         redis_manager.r.delete(order["order_id"])
 
-        # waiting...
-        time.sleep(6)
+
 
     except Exception as e:
         raise Exception(f"Error: {str(e)}")

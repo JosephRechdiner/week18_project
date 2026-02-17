@@ -1,13 +1,9 @@
 from confluent_kafka import Consumer
 import os
 import json
-import logging
 from mongo_handler import MongoManger, add_prep_instructions_mongo, add_special_instructions_mongo, update_burnt_status_mongo
 from text_handler import get_hits, get_analysis
 from redis_handler import RedisManager
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 KAFKA_LISTEN_TOPIC = os.getenv("KAFKA_LISTEN_TOPIC")
 BOOTSTRAP_SERVERS = os.getenv("BOOTSTRAP_SERVERS")
@@ -35,7 +31,6 @@ while True:
         continue
     value = msg.value().decode("utf-8")
     order = json.loads(value)
-    logger.info(order)
 
     # insert to mongo
     client = mongo_manager.get_client()
@@ -51,9 +46,12 @@ while True:
         hits["allergens_hits"] = get_hits(order["prep_instructions"], analysis["common_allergens"])
         hits["meat_hits"] = get_hits(order["prep_instructions"], analysis["meat_ingredients"])
         hits["dairy_hits"] = get_hits(order["prep_instructions"], analysis["dairy_ingredients"])
-        hits["kisher_hits"] = get_hits(order["prep_instructions"], analysis["forbidden_non_kosher"])
+        hits["kosher_hits"] = get_hits(order["prep_instructions"], analysis["forbidden_non_kosher"])
 
         redis_manager.r.set(order["pizza_type"], json.dumps(hits))
-
-    if (hits["meat_hits"] and hits["dairy_hits"]) or not hits["kosher_hits"]:
+    
+    if isinstance(hits, str):
+        hits = json.loads(hits)
+    
+    if (len(hits["meat_hits"]) > 0 and len(hits["dairy_hits"]) > 0):
         update_burnt_status_mongo(order["order_id"], client)

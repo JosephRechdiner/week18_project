@@ -40,3 +40,4 @@ def add_prep_instructions_mongo(order_id, text, client):
         collection.update_one({"order_id": order_id}, {"$set": {"prep_instructions": text}})
     except Exception as e:
         raise Exception(f"Could not set prep instructions field, Error: {str(e)}")
+    

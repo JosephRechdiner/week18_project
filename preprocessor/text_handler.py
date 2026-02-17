@@ -8,6 +8,9 @@ def get_instructions(pizza_type):
     for key, value in data.items():
         if pizza_type in key:
             return value
+        
+    # have to return an empty str so regex-cleanning-text won't crash when operating on None
+    return ""
 
 def clean_text(text):
     final_txt = re.sub(r'[^a-zA-Z ]', '', text)
