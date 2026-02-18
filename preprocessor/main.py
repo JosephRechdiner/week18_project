@@ -8,6 +8,10 @@ KAFKA_LISTEN_TOPIC = os.getenv("KAFKA_LISTEN_TOPIC")
 BOOTSTRAP_SERVERS = os.getenv("BOOTSTRAP_SERVERS")
 KAFKA_GROUP_ID = os.getenv("KAFKA_GROUP_ID")
 
+# ========================================================================
+# SETTING KAFKA CONSUMER
+# ========================================================================
+
 consumer_config = {
     "bootstrap.servers": BOOTSTRAP_SERVERS,
     "group.id": KAFKA_GROUP_ID,
@@ -19,6 +23,10 @@ consumer = Consumer(consumer_config)
 consumer.subscribe([KAFKA_LISTEN_TOPIC])
 
 producer = KafkaProducer()
+
+# ========================================================================
+# MAIN LOOP
+# ========================================================================
 
 while True:
     msg = consumer.poll(1.0)

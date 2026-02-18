@@ -1,6 +1,10 @@
 from pydantic import BaseModel, Field
 from typing import Literal
 
+# ========================================================================
+# MODEL
+# ========================================================================
+
 class Order(BaseModel):
     order_id: str = Field(..., description="Special order id")
     pizza_type: str = Field(..., description="The type of the pizza")

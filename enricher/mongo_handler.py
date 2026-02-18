@@ -3,6 +3,10 @@ import os
 
 MONGO_URI = os.getenv("MONGO_URI") 
 
+# ========================================================================
+# MONGO
+# ========================================================================
+
 class MongoManger:
     client = None
     def __init__(self):
@@ -16,6 +20,9 @@ class MongoManger:
     def get_client(self):
         return self.client 
 
+# ========================================================================
+# DAL
+# ========================================================================
 
 def update_burnt_status_mongo(order_id: str, client: MongoClient):
     database = client["orders_database"]

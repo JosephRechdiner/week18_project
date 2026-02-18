@@ -5,13 +5,13 @@ import os
 import json
 import time
 
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 KAFKA_TOPIC = os.getenv("KAFKA_TOPIC")
 BOOTSTRAP_SERVERS = os.getenv("BOOTSTRAP_SERVERS")
 KAFKA_GROUP_ID = os.getenv("KAFKA_GROUP_ID")
+
+# ========================================================================
+# SETTING KAFKA CONSUMER MONGO MANAGER AND REDIS MANAGER
+# ========================================================================
 
 consumer_config = {
     "bootstrap.servers": BOOTSTRAP_SERVERS,
@@ -26,6 +26,9 @@ consumer.subscribe([KAFKA_TOPIC])
 mongo_manager = MongoManger()
 redis_manager = RedisManager()
 
+# ========================================================================
+# MAIN LOOP
+# ========================================================================
 
 while True:
     # getting data from kafka
@@ -37,7 +40,6 @@ while True:
         continue
     value = msg.value().decode("utf-8")
     order = json.loads(value)
-    logger.info(order)
     
     try:
         # waiting...
@@ -49,8 +51,6 @@ while True:
 
         # deleting from redis
         redis_manager.r.delete(order["order_id"])
-
-
 
     except Exception as e:
         raise Exception(f"Error: {str(e)}")

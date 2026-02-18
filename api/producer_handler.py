@@ -7,6 +7,10 @@ KAFKA_TOPIC = os.getenv("KAFKA_TOPIC")
 
 producer_config = {"bootstrap.servers": BOOTSTRAP_SERVERS}
 
+# ========================================================================
+# KAFKA PRODUCER
+# ========================================================================
+
 class KafkaProducer:
     producer = None
     def __init__(self):

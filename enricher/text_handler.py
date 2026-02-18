@@ -1,5 +1,9 @@
 import json
 
+# ========================================================================
+# TEXT UTILS
+# ========================================================================
+
 def get_analysis():
     with open("./jsons/pizza_analysis_lists.json") as file:
         data = json.load(file)
