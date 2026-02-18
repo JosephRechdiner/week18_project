@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: preprocessor
+  labels:
+    app: preprocessor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: preprocessor
+  template:
+    metadata:
+      labels:
+        app: preprocessor
+    spec:
+      containers:
+      - name: api
+        image: josephrechdiner/week18_preprocessor:v2
+        ports:
+        - containerPort: 8070
+        env:
+        - name: BOOTSTRAP_SERVERS
+          value: "kafka-0.kafka:9092"
+        - name: KAFKA_LISTEN_TOPIC
+          value: "pizza-orders"
+        - name: KAFKA_SEND_TOPIC
+          value: "cleaned-instructions"
+        - name: KAFKA_GROUP_ID
+          value: "preprocessor-team"

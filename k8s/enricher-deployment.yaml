@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enricher
+  labels:
+    app: enricher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enricher
+  template:
+    metadata:
+      labels:
+        app: enricher
+    spec:
+      containers:
+      - name: enricher
+        image: josephrechdiner/week18_enricher:v2
+        ports:
+        - containerPort: 8060
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongo:27017"
+
+        - name: BOOTSTRAP_SERVERS
+          value: "kafka-0.kafka:9092"
+        - name: KAFKA_LISTEN_TOPIC
+          value: "cleaned-instructions"
+        - name: KAFKA_GROUP_ID
+          value: "enricher-team"
+
+        - name: REDIS_HOST
+          value: "redis"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_DB
+          value: "0"

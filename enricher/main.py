@@ -48,7 +48,7 @@ while True:
         hits["dairy_hits"] = get_hits(order["prep_instructions"], analysis["dairy_ingredients"])
         hits["kosher_hits"] = get_hits(order["prep_instructions"], analysis["forbidden_non_kosher"])
 
-        redis_manager.r.set(order["pizza_type"], json.dumps(hits))
+        redis_manager.r.setex(name=order["pizza_type"], value=json.dumps(hits), time=5)
     
     if isinstance(hits, str):
         hits = json.loads(hits)

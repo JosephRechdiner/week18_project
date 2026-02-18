@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kitchen
+  labels:
+    app: kitchen
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kitchen
+  template:
+    metadata:
+      labels:
+        app: kitchen
+    spec:
+      containers:
+      - name: enricher
+        image: josephrechdiner/week18_kitchen:v2
+        ports:
+        - containerPort: 8090
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongo:27017"
+
+        - name: BOOTSTRAP_SERVERS
+          value: "kafka-0.kafka:9092"
+        - name: KAFKA_TOPIC
+          value: "pizza-orders"
+        - name: KAFKA_GROUP_ID
+          value: "kitchen-team"
+
+        - name: REDIS_HOST
+          value: "redis"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_DB
+          value: "0"
