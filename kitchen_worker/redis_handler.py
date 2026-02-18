@@ -18,7 +18,8 @@ class RedisManager:
                     host=REDIS_HOST,
                     port=REDIS_PORT,
                     db=REDIS_DB,
-                    decode_responses=True)
+                    decode_responses=True
+                    )
             self.r = RedisManager.r
             
         except Exception as e:

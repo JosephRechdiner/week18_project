@@ -13,7 +13,7 @@ def get_instructions(pizza_type):
         if pizza_type in key:
             return value
         
-    # have to return an empty str so regex-cleanning-text won't crash when operating on None
+    # have to return an empty str so regex-cleanning-text won't crash when operating on None value
     return ""
 
 def clean_text(text):

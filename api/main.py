@@ -84,7 +84,8 @@ def get_order_by_id(
     if order:
         return {"source": "redis_cache", "order": json.loads(order)}
     
-    # loading from mongo if not in redis
+    # loading from mongo if does not exist in redis
     order = get_order_by_id_mongo(order_id, client) 
     r.r.set(order_id, json.dumps(order))
+    
     return {"source": "mongodb", "order": order}
